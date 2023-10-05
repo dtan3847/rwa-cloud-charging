@@ -6,6 +6,7 @@ import { buildApp } from "./app";
 const app = supertest(buildApp());
 
 async function basicLatencyTest() {
+    console.log("Starting basicLatencyTest")
     await app.post("/reset").expect(204);
     const start = performance.now();
     await app.post("/charge").expect(200);
@@ -34,6 +35,7 @@ function sendCharge() {
 }
 
 async function overchargeTest() {
+    console.log("Starting overchargeTest")
     await app.post("/reset").send({ "account": "test" }).expect(204);
     const start = performance.now();
     async.times(10, sendCharge)
@@ -43,7 +45,7 @@ async function overchargeTest() {
 
 async function runTests() {
     await basicLatencyTest();
-    // await overchargeTest();
+    await overchargeTest();
 }
 
 runTests().catch(console.error);
